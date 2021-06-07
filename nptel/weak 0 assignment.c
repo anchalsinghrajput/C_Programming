@@ -41,6 +41,23 @@ PUT:X=250,Y=350*/
 /*Output:
 X=20,Y=30, Z=0,W=40*/
 
+#include <stdio.h>
 
+	int* fn(int*y)
+	{
+		int x= 27;
+		*y=x*4;
+		return &x;
+	}
+	void main()
+	{
+		int* pA;
+		int x, z, y=25;
+		z = y;
+		pA = fn(&y);
+		printf(“X=%d,Y=%d,Z=%d”, *pA, y, z);
+	}
+
+ 	//The output of the program is X=27,Y=108 Z=25
 
 
