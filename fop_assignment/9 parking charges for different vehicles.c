@@ -3,51 +3,52 @@ and Duration (in whole hours) of customer vehicle parked in parking slot.
 Parking fare is calculated as per the rates given below, print the total parking charges.
 Your program should contain separate input, compute and output functions.
 Make sure to write 3 test cases of your own when you submit your PDF.
-
 Vehicle
 First Rate    
 Second Rate
-
 Car
 Rs 30/hr for first 2hr
 Rs 20/hr for next 
-
 Bus
 Rs 50/hr for first 2hr
 Rs 40/hr for next 
-
 Tempo
 Rs 40 /hr for first 2hr
 Rs 30/hr for next 
-
 Input:
 Input the type of vehicle : c
 Input duration of parking : 8
-
 Output:
 The charges for first 2 hours : 60
 The charges for next 6 hours : 120
 Total parking charges are Rs.180*/
 
-
-
-
-
 #include<stdio.h>
 #include<stdlib.h>
+
 struct point{
     char type;
     int duration;
 };
+
 struct point input()
 {
     struct point a;
         printf("Enter the type of vehicles\nEnter c or C for car, b or B for bus, t or T for Tempo.\n");
         scanf("%c",&a.type);
+        if(a.type!='c'&&a.type!='C'&&a.type!='b'&&a.type!='B'&&a.type!='t'&&a.type!='T')
+        {
+            printf("Invalid type");
+            exit(0);
+        }
+        else
+        {
         printf("Enter the duration of parking\n");
         scanf("%d",&a.duration);
+        }
         return  a;
 }
+
 void compute(int *amt, int *next_amt,int *final_amt)
 {   
     struct point a;
@@ -79,7 +80,7 @@ void compute(int *amt, int *next_amt,int *final_amt)
            }
         }
         
-        else if ((a.type=='t') || (a.type=='T'))
+        else 
         {
             if(a.duration>2)
            {
@@ -87,6 +88,7 @@ void compute(int *amt, int *next_amt,int *final_amt)
                 *next_amt=30*(a.duration-2);
                 *final_amt=(*amt)+(*next_amt);
            }
+           
            else
            {
                *amt=40*(a.duration);
@@ -94,6 +96,7 @@ void compute(int *amt, int *next_amt,int *final_amt)
             
         }
 }
+
 void output(int amt, int next_amt,int final_amt)
 {   
         struct point a; 
@@ -105,15 +108,20 @@ void output(int amt, int next_amt,int final_amt)
         }
         else
         {
-           printf("The charges for  %d hour is : %d \n",a.duration,amt); 
+            printf("The charges for first %d hours : %d \n",a.duration,amt);
+            printf("The charges for next 0 hours : 0 \n");
+            printf("Total parking charges are : %d \n",amt); 
         }
 }
+
 int main()
 {
     struct point a;
     int amt,next_amt,final_amt;
+    
     a=input();
     compute(&amt,&next_amt,&final_amt);
+    
     output(amt,next_amt,final_amt);
     return 0;
 }
