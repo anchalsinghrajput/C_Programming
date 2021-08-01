@@ -181,11 +181,10 @@ int main()
     }
    
     printf("Elements are : ");
-    struct node *temp=head;
-    while(temp!=NULL)
+    while(head!=NULL)
     {
-        printf("%d ",temp->data);
-        temp=temp->next;
+        printf("%d ",head->data);
+        head=head->next;
     }
     
     return 0;
