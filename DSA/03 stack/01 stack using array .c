@@ -151,3 +151,85 @@ struct Stack st;
     return 0;
 
 }
+
+
+
+// Menu driven program
+
+#include<stdio.h>
+#include<stdlib.h>
+struct stack{
+    int size;
+    int a[100];
+    int top;
+};
+
+void push(struct stack *s)
+{
+    int x;
+    if(s->top==s->size)
+        printf("Stack overflow");
+    else
+    {
+        printf("Enter an element to push into the stack : ");
+        scanf("%d",&x);
+        s->top++;
+        s->a[s->top]=x;
+        printf("An element is pushed\n");
+    }
+}
+void pop(struct stack *s)
+{
+    int x;
+    if(s->top==-1)
+        printf("stack underflow");
+    else
+    {
+        x=s->a[s->top];
+        s->top--;
+        printf("Poped out element is : %d\n",x);
+    }
+    
+}
+void display(struct stack *s)
+{
+    printf("elements in the stack are : ");
+    for(int i = 0; i<=s->top; i++)
+        printf("%d ",s->a[i]);
+    printf("\n");
+}
+
+int main()
+{
+    struct stack *s;
+    s->top = -1;
+    printf("Enter size of the stack : ");
+    scanf("%d",&s->size);
+    while(1)
+    {
+        printf("\n------------------------MENU------------------------\n");
+        printf("1. push\n2. pop\n3. display\n4. exit\n");
+        int c;
+        scanf(" %d",&c);
+        switch(c)
+        {
+            case 1: 
+                push(s);
+                break;
+            case 2: 
+                pop(s);
+                break;
+            case 3: 
+                display(s);
+                break;
+            case 4: 
+                exit(0);
+            default:
+                printf("Invalid input ");
+                break;
+        }
+    }
+}
+
+
+
