@@ -438,3 +438,29 @@ void main()
 	else
 		exit(0); 
 }
+
+output :
+Enter the index block : 5
+Enter the block needed : 4
+Enter the number of files for the index 5 on the disk : 1 2 3 4
+allocated
+file indexed
+5 ------------ 1 : 1
+5 ------------ 2 : 1
+5 ------------ 3 : 1
+5 ------------ 4 : 1
+Do you want to enter more files(Yes - 1/No - 0):1
+
+Enter the index block : 6
+Enter the block needed : 2 
+Enter the number of files for the index 6 on the disk : 1 2
+File in the index is already allocated
+Enter the index block : 7
+Enter the block needed : 3
+Enter the number of files for the index 7 on the disk : 7 8 9
+allocated
+file indexed
+7 ------------ 7 : 1
+7 ------------ 8 : 1
+7 ------------ 9 : 1
+Do you want to enter more files(Yes - 1/No - 0):0
