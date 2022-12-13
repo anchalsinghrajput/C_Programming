@@ -299,6 +299,58 @@ int main()
 	lcs_length();
 }
 
+//program 8 =============================== Travelling saleman problem =======================
+
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+int is_every_city_visited(int* visited, int n)
+{
+  for (int i = 0; i < n; i++)
+    if (visited[i] == 0)
+      return 0;
+  return 1;
+}
+
+int tsp(int** mat, int* visited, int n, int pos) {
+  if (is_every_city_visited(visited, n)) {
+    return mat[pos][0];
+  }
+
+  int res = INT_MAX;
+  for (int city = 0; city < n; city++) {
+    if (visited[city] == 0) {
+      visited[city] = 1;
+      int new_answer = mat[pos][city] + tsp(mat, visited, n, city);
+      visited[city] = 0;
+      res = new_answer < res ? new_answer : res;
+    }
+  }
+
+  return res;
+}
+
+int main() {
+  int n;
+  printf("enter n: ");
+  scanf("%d", &n);
+
+  printf("enter matrix: ");
+  int** mat = (int **) malloc(n * sizeof(int *));
+  for (int i = 0; i < n; i++) {
+    mat[i] = (int *) malloc (n * sizeof(int));
+    for (int j = 0; j < n; j++)
+      scanf("%d", &mat[i][j]);
+  }
+
+  int* visited = (int *) malloc(n * sizeof(int));
+  for (int i = 0; i < n; i++)
+    visited[i] = 0;
+  printf("min cost: %d\n", tsp(mat, visited, n, 0));
+
+  return 0;
+}
+
 
 // program 9 ================================ LCS ===============================
 #include<stdio.h>
