@@ -224,7 +224,51 @@ int main()
 }
 
 
-
+//program 6 ============================== floyd ==========================
+#include<stdio.h>
+#include<time.h>
+int min(int a, int b)
+{
+    return (a<b) ? a:b; 
+}
+int main()
+{
+    int n;
+    printf("Enter the number of nodes  : ");
+    scanf("%d",&n);
+    
+    int matrix[n][n];
+    printf("Entet the matrix : ");
+    for(int i = 0; i<n; i++)
+    {
+        for(int j = 0; j<n; j++)
+        {
+            scanf("%d",&matrix[i][j]);   
+        }
+    }
+    
+    
+    for(int k = 0; k<n; k++)
+    {
+        for(int i = 0; i<n; i++)
+        {
+            for(int j = 0; j<n; j++)
+            {
+                matrix[i][j] = min(matrix[i][j], matrix[i][k] + matrix[k][j]);
+            }
+        }
+    }
+    
+    printf("reduced matrix is  : \n");
+    for(int i = 0; i<n; i++)
+    {
+        for(int j = 0; j<n; j++)
+        {
+            printf("%d ", matrix[i][j]);
+        }
+        printf("\n");
+    }
+}
 //program 7 ==============================  0/1 knapsack =====================================
 
 #include<stdio.h>
