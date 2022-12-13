@@ -223,80 +223,59 @@ int main()
 	printf("\nTotal Time  : %f",totalTime);
 }
 
-#include<stdio.h>
-#include<string.h>
-char x[100000],y[100000],b[1000][1000];
-int i,j,m,n,a,c[1000][1000];
-void print_lcs(int i,int j)
-{
-	if(i==0 || j==0)
-		return ;
-	if(b[i][j]=='d')
-	{
-		print_lcs(i-1,j-1);
-		printf("%c",x[i-1]);
-	}
-	else if(b[i][j]=='u')
-	{
-		print_lcs(i-1,j);
-	}
-	else
-	{
-		print_lcs(i,j-1);
-	}
-}
-void lcs_length()
-{
-	m=strlen(x);
-	n=strlen(y);
-	for(i=0;i<=m;i++)
-		c[i][0]=0;
-	for(j=0;j<=n;j++)
-		c[0][j]=0;
-	for(i=1;i<=m;i++)
-	{
-		for(j=1;j<=n;j++)
-		{
-			if(x[i-1]==y[j-1])
-			{
-				c[i][j]=c[i-1][j-1]+1;
-				b[i][j]='d';     //diagonal arrow
-			}
-			else
-			{
-    			if(c[i-1][j]>=c[i][j-1])
-    			{
-    				c[i][j]=c[i-1][j];
-    				b[i][j]='u';      //upper arrow
-    			}
-    			else
-    			{
-    				c[i][j]=c[i][j-1];
-    				b[i][j]='s';       // side arrow
-    			}
-			}
-		}
-	}
-	for(i=0;i<=n;i++)
-	{
-		for(j=0;j<=m;j++)
-		{
-			printf("%d  ",c[j][i]);
-		}
-		printf("\n");
-	}
-	print_lcs(m,n);
-}
 
+
+//program 7 ==============================  0/1 knapsack =====================================
+
+#include<stdio.h>
+#include<time.h>
+int max(int a, int b)
+{
+    return (a>b)?a:b;
+}
 int main()
 {
-	printf("Welcome to the LCS Implementation in C");
-	printf("\nEnter 1st Sequence : ");
-	scanf("%s",x);
-	printf("\nEnter the 2nd Sequence : ");
-	scanf("%s",y);
-	printf("\nLongest Common Subsequence is:\n");
-	lcs_length();
+    int n;
+    printf("Enter the number of items  : ");
+    scanf("%d",&n);
+    
+    int profit[n];
+    printf("Enter the profit  : ");
+    for(int i = 0; i<n; i++)
+    {
+        scanf("%d",&profit[i]);
+    }
+    
+    int weight[n];
+    printf("Enter the weight : ");
+    for(int i = 0; i<n; i++)
+    {
+        scanf("%d",&weight[i]);
+    }
+    
+    int m;
+    printf("Enter the maximum weight  : ");
+    scanf("%d",&m);
+    
+    clock_t start = clock();
+    
+    int dp[n+1][m+1];
+    for (int i = 0; i < n+1; i++)
+    {
+        for (int j = 0; j<m+1; j++)
+        {
+            if (i == 0 || j == 0)
+                dp[i][j] = 0;
+            else if (j >= weight[i - 1])
+                dp[i][j] = max(dp[i-1][j], dp[i-1][j-weight[i-1]] + profit[i-1]);
+            else
+                dp[i][j] = dp[i-1][j];
+        }
+    }
+     clock_t end = clock();
+    
+    printf("Maximum profit is  : %d",dp[n][m]);
+    printf("\nTotal time : %lf",(double)end - start);
 }
 
 //program 8 =============================== Travelling saleman problem =======================
