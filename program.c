@@ -225,14 +225,14 @@ int main()
 
 // program 5 ============================== prims ============================
 #include<stdio.h>
-int n,u,v,i,j,ne=1;
-int visited[10]={0},min,mincost=0,cost[10][10];
+int n;
+int cost[10][10];
 void input()
 {
     printf("\nEnter the adjacency matrix:\n");
-    for(i=1;i<=n;i++)
+    for(int i=1;i<=n;i++)
     {
-        for(j=1;j<=n;j++)
+        for(int j=1;j<=n;j++)
         {
             scanf("%d",&cost[i][j]);
             if(cost[i][j]==0)
@@ -243,12 +243,16 @@ void input()
 
 void prims()
 {
+    int nodes_done = 1;
+    int visited[10] = {0}, mincost = 0;
+
     visited[1]=1;
-    while(ne < n)
+    while(nodes_done < n)
     {
-        for(i=1,min=999;i<=n;i++)
+        int min = 999, u = -1, v = -1;
+        for(int i=1;i<=n;i++)
         {
-            for(j=1;j<=n;j++)
+            for(int j=1;j<=n;j++)
             {
                 if(cost[i][j]< min && visited[i])
                 {
@@ -260,7 +264,7 @@ void prims()
         }       
         if(visited[u]==0 || visited[v]==0)
         {
-            printf("\n Edge %d:(%d %d) cost:%d",ne++,u,v,min);
+            printf("\n Edge %d:(%d %d) cost:%d",nodes_done++,u,v,min);
             mincost+=min;
             visited[v]=1;
         }
