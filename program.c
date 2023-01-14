@@ -1,4 +1,5 @@
 // program 1 ======================== tower of hanoi ==================
+
 #include<stdio.h>
 #include<time.h>
 void toh(int n, char A, char B, char C)
@@ -15,7 +16,7 @@ int main()
 {
 	int n;
 	double totalTime;
-	__clock_t start,end;
+	clock_t start,end;
 	start = clock();
 	printf("Enter the number of disk : ");
 	scanf("%d", &n);
@@ -27,6 +28,7 @@ int main()
 
 
 //program 2 ======================== binary search ====================
+
 #include<stdio.h>
 #include<time.h>
 int binarySearch(int arr[], int l, int r, int key)
@@ -63,7 +65,7 @@ int main()
 	scanf("%d",&key);
 	
 	double totalTime;
-	__clock_t start, end;
+	clock_t start, end;
 	start =clock();
 	int ans = binarySearch(arr,0,n-1,key);
 	end = clock();
@@ -76,7 +78,7 @@ int main()
 }
 
 
-//program 3  =========================== mergesort ============================
+//program 3  =========================== mergesort =======================
 
 #include<stdio.h>
 #include<time.h>
@@ -129,7 +131,7 @@ int main()
 {
 
 	double totalTime;
-	__clock_t start,end;
+	clock_t start,end;
 	start = clock();
 	
 	int n;
@@ -156,7 +158,8 @@ int main()
 }
 
 
-// program 4 ============================== quick sort ==========================
+// program 4 ============================== quick sort  ===================
+
 #include<stdio.h>
 #include<time.h>
 void swap(int *a, int *b)
@@ -223,8 +226,12 @@ int main()
 	printf("\nTotal Time  : %f",totalTime);
 }
 
+
+
+
 // program 5 ============================== prims ============================
 #include<stdio.h>
+#include <time.h>
 int n;
 int cost[10][10];
 void input()
@@ -276,10 +283,15 @@ void main() {
     printf("\nEnter the number of nodes:");
     scanf("%d",&n);
     input();
+
+  clock_t start = clock();
     prims();
+  clock_t end = clock();
+  printf("Time taken: %lf\n", (double)(end - start) / CLOCKS_PER_SEC);
+
 }
 
-//================================== kruskal ==============================
+//program 6 ======================= kruskal ==============================
 #include<stdio.h> 
 #include<time.h>
 
@@ -340,13 +352,13 @@ void kruskal()
 
 void main()
 {
-    input();
+   	 input();
 	printf("The edges of Minimum Cost Spanning Tree are\n");
 	clock_t start=clock();
-    kruskal();
-    clock_t end=clock();
+    	kruskal();
+    	clock_t end=clock();
     double totaltime=(double)(end-start)/CLOCKS_PER_SEC;
-    printf("Total time is %f\n",totaltime);
+    printf("\nTotal time is %f\n",totaltime);
 }
 
 int find(int i)
@@ -365,7 +377,10 @@ int uni(int i,int j)
 	}
 	return 0;
 }
-//program 6 ============================== floyd ==========================
+
+
+//program 7 ============================== floyd ==========================
+
 #include<stdio.h>
 #include<time.h>
 int min(int a, int b)
@@ -379,7 +394,7 @@ int main()
     scanf("%d",&n);
     
     int matrix[n][n];
-    printf("Entet the matrix : ");
+    printf("Enter the matrix : ");
     for(int i = 0; i<n; i++)
     {
         for(int j = 0; j<n; j++)
@@ -388,6 +403,7 @@ int main()
         }
     }
     
+    clock_t start = clock();
     
     for(int k = 0; k<n; k++)
     {
@@ -399,7 +415,8 @@ int main()
             }
         }
     }
-    
+
+    clock_t end = clock();
     printf("reduced matrix is  : \n");
     for(int i = 0; i<n; i++)
     {
@@ -409,8 +426,12 @@ int main()
         }
         printf("\n");
     }
+    double totaltime=(double)(end-start)/CLOCKS_PER_SEC;
+    printf("\nTotal time is %f\n",totaltime);
 }
-//program 7 ==============================  0/1 knapsack =====================================
+
+
+//program8 =====================  0/1 knapsack ===============================
 
 #include<stdio.h>
 #include<time.h>
@@ -458,17 +479,28 @@ int main()
         }
     }
      clock_t end = clock();
-    
     printf("Maximum profit is  : %d",dp[n][m]);
-    printf("\nTotal time : %lf",(double)end - start);
+    double totaltime=(double)(end-start)/CLOCKS_PER_SEC;
+    printf("Total time is %f\n",totaltime);
 }
 
-//program 8 =============================== Travelling saleman problem =======================
+
+//program 9 ================= Travelling saleman problem =======================
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <limits.h>
-int is_every_city_visited(int* visited, int n)
+#include <time.h>
+
+int res = INT_MAX;
+int mat[100][100];
+int visited[100];
+char path[100];
+int path_idx = 0;
+char final_path[100];
+int size;
+
+int is_every_city_visited(int n)
 {
   for (int i = 0; i < n; i++)
     if (visited[i] == 0)
@@ -476,49 +508,67 @@ int is_every_city_visited(int* visited, int n)
   return 1;
 }
 
-int tsp(int** mat, int* visited, int n, int pos) {
-  if (is_every_city_visited(visited, n)) {
-    return mat[pos][0];
-  }
-
-  int res = INT_MAX;
-  for (int city = 0; city < n; city++) {
-    if (visited[city] == 0) {
-      visited[city] = 1;
-      int new_answer = mat[pos][city] + tsp(mat, visited, n, city);
-      visited[city] = 0;
-      res = new_answer < res ? new_answer : res;
+void tsp(int n, int pos, int total_cost)
+{
+  if (is_every_city_visited(n))
+  {
+    total_cost += mat[pos][0];
+    if (total_cost < res)
+    {
+      res = total_cost;
+       for (int i = 0; i < path_idx; i++)
+       {
+            final_path[i] = path[i] + 1;
+            size = i;
+       }
     }
   }
 
-  return res;
+  for (int city = 0; city < n; city++)
+  {
+    if (visited[city] == 0)
+    {
+      visited[city] = 1;
+       path[path_idx++] = city + '0';
+      tsp(n, city, total_cost + mat[pos][city]);
+       path[path_idx--] = 0;
+      visited[city] = 0;
+    }
+  }
 }
 
 int main() {
   int n;
-  printf("enter n: ");
+  printf("enter number of cities : ");
   scanf("%d", &n);
 
-  printf("enter matrix: ");
-  int** mat = (int **) malloc(n * sizeof(int *));
-  for (int i = 0; i < n; i++) {
-    mat[i] = (int *) malloc (n * sizeof(int));
+  printf("enter matrix: \n");
+  for (int i = 0; i < n; i++)
     for (int j = 0; j < n; j++)
       scanf("%d", &mat[i][j]);
-  }
 
-  int* visited = (int *) malloc(n * sizeof(int));
   for (int i = 0; i < n; i++)
     visited[i] = 0;
-  printf("min cost: %d\n", tsp(mat, visited, n, 0));
+
+  clock_t start = clock();
+  tsp(n, 0, 0);
+  printf("Minimum cost to travel: %d\n", res);
+  printf("path: ");
+  for(int i = 0; i<size; i++)
+  {
+      printf("%c->",final_path[i]);
+  }
+  printf("%c",final_path[size]);
+  clock_t end = clock();
+  printf("\nTime taken: %lf\n", (double)(end - start) / CLOCKS_PER_SEC);
 
   return 0;
 }
 
-
-// program 9 ================================ LCS ===============================
+// program 10 ========================= LCS ===============================
 #include<stdio.h>
 #include<string.h>
+#include<time.h>
 char x[100000],y[100000],b[1000][1000];
 int i,j,m,n,a,c[1000][1000];
 void print_lcs(int i,int j)
@@ -584,11 +634,14 @@ void lcs_length()
 
 int main()
 {
-	printf("Welcome to the LCS Implementation in C");
 	printf("\nEnter 1st Sequence : ");
 	scanf("%s",x);
 	printf("\nEnter the 2nd Sequence : ");
 	scanf("%s",y);
 	printf("\nLongest Common Subsequence is:\n");
+	clock_t start = clock();
 	lcs_length();
+	clock_t end = clock();
+	double totaltime=(double)(end-start)/CLOCKS_PER_SEC;
+    	printf("\nTotal time is %f\n",totaltime);
 }
