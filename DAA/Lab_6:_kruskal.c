@@ -70,13 +70,17 @@ void kruskal()
     printf("\n\tMinimum cost = %d\n",mincost);
 }
 
-void main()
+int main()
 {
     input();
-	printf("The edges of Minimum Cost Spanning Tree are\n");
+	
+    printf("The edges of Minimum Cost Spanning Tree are\n");
 	clock_t start=clock();
     kruskal();
     clock_t end=clock();
+    
     double totaltime=(double)(end-start)/CLOCKS_PER_SEC;
     printf("Total time is %f\n",totaltime);
+    
+    return(0);
 }

@@ -23,18 +23,19 @@ void prim(int edges, int arr[edges][edges])
 
         for (int i = 0; i < edges; i++)
         {
-            for (int j = 0; j < edges && selected[i] == 1; j++) 
+            for (int j = 0; j < edges && selected[i]; j++) 
             {
-                if (selected[j] == 0 && arr[i][j]) 
+                // the edge should not in selected
+                if (selected[j] != 0 || !(arr[i][j])) 
                 {  
+                    continue;                
+                }    
                     
-                    // the edge should not in selected
-                    if (minimum > arr[i][j]) 
-                    {
-                        minimum = arr[i][j];
-                        x = i;
-                        y = j;
-                    }
+                if (minimum > arr[i][j]) 
+                {
+                    minimum = arr[i][j];
+                    x = i;
+                    y = j;
                 }
             }
         }
@@ -70,7 +71,7 @@ int main()
     end_time = clock();
     
     // execution time
-    printf("The total time taken: %f\n", (double)(end_time -start_time)/CLOCKS_PER_SEC);
+    printf("The total time taken: %f\n", (double)(end_time - start_time)/CLOCKS_PER_SEC);
 
     return(0);
 }

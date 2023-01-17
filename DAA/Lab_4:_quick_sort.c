@@ -16,7 +16,7 @@ int sort(int start, int end, int *arr)
 
     for(int j = start; j <= end; j++)
     {
-        if(pivot < arr[j])
+        if(pivot > arr[j])
         {
             swap(arr + i, arr + j);
             i += 1;

@@ -11,6 +11,7 @@ int is_every_city_visited(int* visited, int n)
             return(0);
         }
     }
+
     return(1);
 }
 

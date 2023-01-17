@@ -6,31 +6,24 @@ void merge(int *arr, int start, int mid, int end)
     int left_length = mid - start + 1;
     int right_length = end - mid;
   
-    int temp_left[left_length];
-    int temp_right[right_length];
+    int temp_arr[end - start + 1];
   
-    // creating left array
-    for (int i = 0; i < left_length; i++)
-    {    
-        temp_left[i] = arr[start + i];
-    }
-    
-    // creating right array.
-    for (int i = 0; i < right_length; i++)
+    // storing all values in temp_arr
+    for (int i = 0; i < (end - start + 1); i++)
     {
-        temp_right[i] = arr[mid + 1 + i];
+        temp_arr[i] = arr[i + start];
     }
 
     for (int i = 0, j = 0, k = start; k <= end; k++)
     {
-        if ((i < left_length) &&(j >= right_length || temp_left[i] <= temp_right[j]))
+        if ((i < left_length) && (j >= right_length || temp_arr[i] <= temp_arr[j + left_length]))
         {
-            arr[k] = temp_left[i];
+            arr[k] = temp_arr[i];
             i++;
         }
         else
         {
-            arr[k] = temp_right[j];
+            arr[k] = temp_arr[j + left_length];
             j++;
         }
     }  

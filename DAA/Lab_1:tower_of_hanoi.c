@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <time.h>
 
+// a is first rob
+// b is the auxilary rod
+// c is the last rod
 void toh(int n, char a, char b, char c)
 {
     if (n == 1)

@@ -17,8 +17,6 @@ int main()
     printf("Enter the number of items: ");
     scanf("%d", &n);
 
-   
-
     // user input values
     int profit[n], weight[n];
     printf("Enter the profit: ");
