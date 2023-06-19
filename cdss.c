@@ -1,0 +1,584 @@
+//1a.l
+%{
+#include<stdio.h>
+int characters = 0, words = 0, lines = 0, spaces = 0;
+%}
+
+
+%%
+" " {words++; spaces++;}
+[\n] {words++; lines++;}
+[\t\n] {words++;}
+[^\t\n] {characters++;}
+%%
+
+int main()
+{
+	yyin = fopen("a.txt", "r");
+	yylex();
+	printf("\nNumber of characters : %d\nNumber of words : %d\nNumber of spaces : %d\nNumber of lines : %d\n",characters,words,spaces,lines);
+	return 0;
+}
+
+
+//1b.l
+
+%{
+#include <stdio.h>
+#include <stdlib.h>
+int identifierCount = 0;
+%}
+
+digit [0-9]
+letter [a-zA-Z_]
+
+%%
+{letter}({letter}|{digit})*   {identifierCount++;}
+{digit}({letter}|{digit})* {identifierCount;}
+%%
+
+
+int main()
+{
+    printf("Enter an identifier name: ");
+    yylex();
+    printf("Number of identifiers = %d\n", identifierCount);
+    return 0;
+}
+
+//2a.l
+%{
+#include <stdio.h>
+#include <stdlib.h>
+int singleCount = 0, multiCount = 0;
+%}
+
+%%
+"//".* {singleCount++;}
+"/*"[a-zA-Z0-9' '\t\n]*"*/" {multiCount++;}
+%%
+
+int main()
+{
+    yyin = fopen("file1.c","r");
+    yyout = fopen("withoutComment.c","w");
+    
+    yylex();
+    
+    fclose(yyin);
+    fclose(yyout);
+    
+    printf("Number of single line comments are : %d\n", singleCount);
+    printf("Number of multi line comments are : %d\n", multiCount);
+    
+    return 0;
+}
+
+//2b.l
+
+%{
+#include <stdio.h>
+int valid = 0;
+%}
+
+%%
+[a-zA-Z]*(and|or|but|however)[a-zA-Z]* {valid=1;}
+.|[\n];
+%%
+
+int main()
+{
+    printf("Enter a sentence: ");
+    yylex();
+    if(valid)
+    {
+    	printf("Statement is compound ");
+    }
+    else
+    {
+    	printf("Statement is simple ");
+    }
+    return 0;
+}
+
+//3a.l
+
+%{
+#include<stdio.h>
+int pi = 0, ni = 0, pf=0,nf=0;
+%}
+
+%%
+[+]?[0-9]+ {pi++;}
+[-][0-9]+ {ni++;}
+[+]?[0-9]*\.[0-9]+ {pf++;}
+[-][0-9]*\.[0-9]+ {nf++;}
+%%
+
+int main()
+{
+	yyin = fopen("sample.txt","r");
+	yylex();
+	printf("\nNumber of positive interger : %d\n",pi);
+	printf("\nNumber of negative interger : %d\n",ni);
+	printf("\nNumber of positive fraction : %d\n",pf);
+	printf("\nNumber of negative fraction : %d\n",nf);
+	return 0;
+}
+
+//3b.l
+%{
+	#include<stdio.h>
+	int pf = 0, sf = 0;
+%}
+
+%%
+"scanf" { sf++; fprintf(yyout,"readf");}
+"printf" { pf++; fprintf(yyout,"writef");}
+%%
+
+int main()
+{
+	yyin = fopen("file1.c","r");
+	yyout = fopen("file2.c","w");
+	yylex();
+	printf("Number of printf function : %d\nNumber of scanf function :  %d ",pf,sf);
+	return 0;
+}
+
+
+//4a.l
+%{
+#include "y.tab.h"
+extern yylval;
+%}
+
+%%
+[0-9]+ {yylval = atoi(yytext); return num;}
+[\+\-\*\/] {return yytext[0];}
+[)] {return yytext[0];}
+[(] {return yytext[0];}
+. {;}
+\n {return 0;}
+%%
+
+  //4a.y
+  %{
+#include<stdio.h>
+#include<stdlib.h>
+%}
+
+%token num;
+%left '+' '-'
+%left '*' '/'
+
+%%
+input : exp
+{
+    printf("result : %d",$$);
+    exit(0);
+}
+
+exp : exp '+' exp {$$ = $1 + $3;}
+| exp '-' exp {$$ = $1 - $3;}
+| exp '*' exp {$$ = $1 * $3;}
+| exp '/' exp {
+    if($3 == 0){
+    printf("disision by zero ");
+    exit(0);
+    }
+    else{
+        $$ = $1 / $3;
+    }
+}
+| '('exp')' {$$ = $2;}
+| num {$$ = $1;};
+%%
+
+int yyerror()
+{
+    printf("errror ");
+    exit(0);
+}
+int main()
+{
+    printf("Enter an expression : \n" );
+    yyparse();
+}
+  
+ // 5a.l
+%{
+#include "y.tab.h"
+%}
+
+%%
+[a-z] return L;
+[0-9] return D;
+%%
+  
+//5a.y
+%{
+#include<stdio.h>
+#include<stdlib.h>
+%}
+
+%token L D
+
+%%
+var : L A {printf("Valid varible !!"); return 0;}
+A : A L;
+| A D;
+|;
+%%
+
+int yyerror()
+{
+    printf("Invalid variable !!");
+    exit(0);
+}
+int main()
+{
+    printf("Type a variable ");
+    yyparse();
+}
+  
+//6a.l
+  %{
+#include "y.tab.h"
+%}
+
+%%
+a return A;
+b return B;
+. return yytext[0];
+/n return yytext[0];
+%%
+ 
+//6b.y
+%{
+    #include<stdio.h>
+    #include <stdlib.h>
+%}
+%token A B
+%%
+str:s '\n' {printf("Valid string");return 0;}
+s : A s B;
+|;
+%%
+int yyerror()
+{
+    printf("Invalid string");
+    exit(0);
+}
+
+int main()
+{
+    printf("Type the string ? \n");
+    yyparse();
+}
+
+//7a.c
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+    FILE *inputFile, *symbolTable, *optable;
+    int locationCounter = 0, startingAddress = 0, operand = 0, opcode = 0, length = 0;
+    char label[20], mnemonic[20], operandField[20], opcodeString[20];
+
+    inputFile = fopen("input.txt", "r");
+    symbolTable = fopen("symtab.txt", "w");
+
+    fscanf(inputFile, "%s%s%d", label, mnemonic, &operand);
+
+    if(strcmp(mnemonic, "START") == 0) {
+        startingAddress = operand;
+        locationCounter = startingAddress;
+        printf("\t%s\t%s\t%d\n", label, mnemonic, operand);
+    }
+
+    fscanf(inputFile, "%s%s", label, mnemonic);
+
+    while(strcmp(mnemonic, "END") != 0) {
+        fscanf(inputFile, "%s", operandField);
+        printf("\n%d\t%s\t%s\t%s\n", locationCounter, label, mnemonic, operandField);
+
+        if(strcmp(label, "-") != 0) {
+            fprintf(symbolTable, "\n%d\t%s\n", locationCounter, label);
+        }
+
+        optable = fopen("Optab.txt", "r");
+
+        while(!feof(optable)) {
+            fscanf(optable, "%s%d", opcodeString, &opcode);
+            if(strcmp(mnemonic, opcodeString) == 0) {
+                break;
+            }
+        }
+
+        fclose(optable);
+
+        if(strcmp(mnemonic, "WORD") == 0) {
+            locationCounter += 3;
+        }
+        else if(strcmp(mnemonic, "RESW") == 0) {
+            operand = atoi(operandField);
+            locationCounter += (3 * operand);
+        }
+        else if(strcmp(mnemonic, "BYTE") == 0) {
+            if(operandField[0] == 'X') {
+                locationCounter += 1;
+            }
+            else {
+                length = strlen(operandField) - 2;
+                locationCounter += length;
+            }
+        }
+        else if(strcmp(mnemonic, "RESB") == 0) {
+            operand = atoi(operandField);
+            locationCounter += operand;
+        }
+        else
+        {
+        	locationCounter += 3;
+        }
+
+        fscanf(inputFile, "%s%s", label, mnemonic);
+    }
+
+    printf("\n%d\t%s\t%s\t%s\n", locationCounter, label, mnemonic, operandField);
+
+    if(strcmp(mnemonic, "END") == 0) {
+        printf("\nProgram Length = %d\n", locationCounter - startingAddress);
+    }
+
+    fclose(inputFile);
+    fclose(symbolTable);
+
+    return 0;
+}
+  
+  
+//8a.c
+  #include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+
+void main() {
+	FILE *fp;
+	int i, addr1, j, staddr1;
+	char name[10], line[50], name1[10], addr[10], rec[10], ch, staddr[10];
+	printf("Enter program name: ");
+	scanf("%s", name);
+	fp = fopen("abssrc.txt", "r");
+	fscanf(fp, "%s", line);
+
+	//program name 
+	for(i = 2, j = 0; i < 8, j < 6; i++, j++) 
+		name1[j] = line[i];
+	name1[j] = '\0';
+
+
+	printf("name from obj. %s\n", name1);
+
+	if(strcmp(name, name1) == 0) {
+		do {
+			fscanf(fp, "%s", line);
+			if(line[0] == 'T') {
+				for(i = 2, j = 0; i < 8, j < 6; i++, j++) 
+					staddr[j] = line[i];
+				staddr[j] = '\0';
+
+				staddr1 = atoi(staddr);
+				i = 12;
+				
+				while(line[i] != '$') {
+					if(line[i] != '^') {
+						printf("00%d\t%c%c\n", staddr1, line[i], line[i+1]);
+						staddr1++;
+						i = i + 2;
+					} 
+					else 
+					i++;
+				}
+			}
+			else if(line[0] == 'E')
+			fclose(fp); 
+		}
+		while(!feof(fp));
+	}
+}
+ 
+//9a.c
+  
+#include <stdio.h>
+#include <string.h>
+
+int main()
+{
+    char non_terminals[5], terminals[10], productions[5][5], first[5][5], temp;
+    int i,j,k=0,f=0, num_non_terminals, num_terminals;
+    
+    // Get the number of non-terminals in the grammar
+    printf("\nEnter the number of non-terminals in the grammar:");
+    scanf("%d", &num_non_terminals);
+    
+    // Get the non-terminals in the grammar
+    printf("\nEnter the non-terminals in the grammar:\n");
+    for(i = 0; i < num_non_terminals; i++)
+    {
+        scanf("\n%c", &non_terminals[i]);
+    }
+    
+    // Get the number of terminals in the grammar
+    printf("\nEnter the number of terminals in the grammar: (Enter e for epsilon) ");
+    scanf("%d", &num_terminals);
+    
+    // Get the terminals in the grammar
+    printf("\nEnter the terminals in the grammar:\n");
+    for(i = 0; i < num_terminals || terminals[i] == '$'; i++)
+    {
+        scanf("\n%c", &terminals[i]);
+    }
+    
+    // Initialize productions and first sets with non-terminals
+    for(i = 0; i < num_non_terminals; i++)
+    {
+        productions[i][0] = non_terminals[i];
+        first[i][0] = non_terminals[i];
+    }
+    
+    // Get the productions for each non-terminal
+    printf("\nEnter the productions:\n");
+    for(i = 0; i < num_non_terminals; i++)
+    {
+        scanf("%c", &temp);
+        printf("\nEnter the production for %c (End the production with '$' sign): ", productions[i][0]);
+        for(j = 0; productions[i][j] != '$';)
+        {
+            j += 1;
+            scanf("%c", &productions[i][j]);
+        }
+    }
+    
+    // Compute the first sets for each non-terminal
+    for(i = 0; i < num_non_terminals; i++)
+    {
+        f = 0;
+        for(j = 1; productions[i][j] != '$'; j++)
+        {
+            for(k = 0; k < num_terminals; k++)
+            {
+                if(f == 1)
+                    break;
+                if(productions[i][j] == terminals[k])
+                {
+                    first[i][j] = terminals[k];
+                    first[i][j+1] = '$';
+                    f = 1;
+                    break;
+                }
+                else if(productions[i][j] == non_terminals[k])
+                {
+                    first[i][j] = first[k][j];
+                    if(first[i][j] == 'e')
+                        continue;
+                    first[i][j+1] = '$';
+                    f = 1;
+                    break;
+                }
+            }
+        }
+    }
+    
+    // Display the first sets for each non-terminal
+    for(i = 0; i < num_non_terminals; i++)
+    {
+        printf("\n\nThe first of %c -> ", first[i][0]);
+        for(j = 1; first[i][j] != '$'; j++)
+        {
+            printf("%c\t", first[i][j]);
+        }
+    }
+    return 0;
+}
+
+//10a.c
+  #include<stdio.h>
+#include<string.h>
+
+int stack_top = 0, input_index = 0, i = 0, j = 0, input_length = 0;
+char input_string[16], action[20], stack[15], act[10];
+
+void check_reduction();
+
+void main() {
+    printf("GRAMMAR is E->E+E \n E->E*E \n E->(E) \n E->id");
+    printf("Enter input string: ");
+    fgets(input_string);
+    input_length = strlen(input_string);
+    strcpy(act, "SHIFT->");
+    puts("stack \t input \t action");
+    printf("\n$\t%s$", input_string);
+    for(stack_top = 0, i = 0, j = 0; j < input_length; stack_top++, i++, j++) {
+        if(input_string[j] == 'i' && input_string[j+1] == 'd') {
+            stack[i] = input_string[j];
+            stack[i+1] = input_string[j+1];
+            stack[i+2] = '\0';
+            input_string[j] = ' ';
+            input_string[j+1] = ' ';
+            printf("\n$%s\t%s$\t%sid", stack, input_string, act);
+            check_reduction();
+        }
+        else {
+            stack[i] = input_string[j];
+            stack[i+1] = '\0';
+            input_string[j] = ' ';
+            printf("\n$%s\t%s$\t%ssymbols", stack, input_string, act);
+            check_reduction();
+        }
+    }
+}
+
+void check_reduction() {
+    char reduce[20] = "REDUCE TO E";
+    for(int z = 0; z < input_length; z++) {
+        if(stack[z] == 'i' && stack[z+1] == 'd') {
+            stack[z] = 'E';
+            stack[z+1] = '\0';
+            printf("\n$%s\t%s$\t%s", stack, input_string, reduce);
+            j++;
+        }
+    }
+    for(int z = 0; z < input_length; z++) {
+        if(stack[z] == 'E' && stack[z+1] == '+' && stack[z+2] == 'E') {
+            stack[z] = 'E';
+            stack[z+1] = '\0';
+            stack[z+2] = '\0';
+            printf("\n$%s\t%s$\t%s", stack, input_string, reduce);
+            i = i - 2;
+        }
+    }
+    for(int z = 0; z < input_length; z++) {
+        if(stack[z] == 'E' && stack[z+1] == '*' && stack[z+2] == 'E') {
+            stack[z] = 'E';
+            stack[z+1] = '\0';
+            stack[z+2] = '\0';
+            printf("\n$%s\t%s$\t%s", stack, input_string, reduce);
+            i = i - 2;
+        }
+    }
+    for(int z = 0; z < input_length; z++) {
+        if(stack[z] == '(' && stack[z+1] == 'E' && stack[z+2] == ')') {
+            stack[z] = 'E';
+            stack[z+1] = '\0';
+            stack[z+2] = '\0';
+            printf("\n$%s\t%s$\t%s", stack, input_string, reduce);
+            i = i - 2;
+        }
+    }
+    printf("\n");
+}
+
+
+
