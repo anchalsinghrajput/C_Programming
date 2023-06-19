@@ -1,4 +1,17 @@
-//1a.l
+command for running lex file 
+lex filename.l
+cc lex.yy.c -ll
+./a.out
+
+command for running lex and yacc file 
+lex filename.l
+yacc -d filename.y
+cc lex.yy.c y.tab.c -lfl
+./a.out
+
+===========================================================
+//1a.l Program to count the number of character, words, spaces and lines in the given input file.
+
 %{
 #include<stdio.h>
 int characters = 0, words = 0, lines = 0, spaces = 0;
@@ -20,8 +33,8 @@ int main()
 	return 0;
 }
 
-
-//1b.l
+===========================================================
+//1b.l Program to recognize and count the number of identifiers in a file.
 
 %{
 #include <stdio.h>
@@ -46,7 +59,9 @@ int main()
     return 0;
 }
 
-//2a.l
+===========================================================
+//2a.l  Program to count the number of comment lines in the given C program. Also eliminate then and copy the resulting program into separate file.
+
 %{
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,7 +89,8 @@ int main()
     return 0;
 }
 
-//2b.l
+===========================================================
+//2b.l Program to recognize whether a given sentence is simple or compound.
 
 %{
 #include <stdio.h>
@@ -101,7 +117,8 @@ int main()
     return 0;
 }
 
-//3a.l
+===========================================================
+//3a.l  Program to count number of positive integer, negative integer, positive fraction and negative fraction.
 
 %{
 #include<stdio.h>
@@ -126,7 +143,9 @@ int main()
 	return 0;
 }
 
-//3b.l
+===========================================================
+//3b.l Program to count number of scanf and printf statement in a C program. Replace them with readf and writef statement respectively.
+
 %{
 	#include<stdio.h>
 	int pf = 0, sf = 0;
@@ -146,8 +165,10 @@ int main()
 	return 0;
 }
 
+===========================================================
+Program to evaluate arithmetic expression involving operators +,-,*,/.
+//4a.l  
 
-//4a.l
 %{
 #include "y.tab.h"
 extern yylval;
@@ -163,6 +184,7 @@ extern yylval;
 %%
 
   //4a.y
+  
   %{
 #include<stdio.h>
 #include<stdlib.h>
@@ -206,7 +228,15 @@ int main()
     yyparse();
 }
   
+===========================================================
+Program to recognize a valid variable which starts with a letter, followed by any number of letter or digit. (L is letter, D is digit)
+var -> L A
+A -> A L
+A -> A D
+A -> ;(epsilon)
+
  // 5a.l
+ 
 %{
 #include "y.tab.h"
 %}
@@ -242,7 +272,13 @@ int main()
     yyparse();
 }
   
+===========================================================
+Program to recognize the string using the grammar a^n b^n;
+S->aSb 
+S->;
+
 //6a.l
+
   %{
 #include "y.tab.h"
 %}
@@ -277,7 +313,10 @@ int main()
     yyparse();
 }
 
-//7a.c
+===========================================================
+
+//7a.c C program to recognize to implement pass1 assembler.
+
 #include <stdio.h>
 #include <string.h>
 
@@ -358,9 +397,10 @@ int main() {
     return 0;
 }
   
-  
-//8a.c
-  #include <stdio.h>
+ =========================================================== 
+//8a.c C program to implement absolute loader.
+
+#include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
 
@@ -409,7 +449,9 @@ void main() {
 	}
 }
  
-//9a.c
+ 
+ ===========================================================
+//9a.c C program to find the first set in context free grammar.
   
 #include <stdio.h>
 #include <string.h>
@@ -503,8 +545,14 @@ int main()
     return 0;
 }
 
-//10a.c
-  #include<stdio.h>
+===========================================================
+//10a.c   C program to implement shift reduce parser for the given grammar.
+E -> E + E
+E -> E * E
+E -> ( E )
+E -> id
+
+#include<stdio.h>
 #include<string.h>
 
 int stack_top = 0, input_index = 0, i = 0, j = 0, input_length = 0;
